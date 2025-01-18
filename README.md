@@ -1,8 +1,12 @@
 # clap-fundsp
 
-An example how to plug FunDSP into a nih-plug template.
+An example how to plug [FunDSP] into a [nih-plug] template.
 
-This is a modified version of Gain from: https://github.com/robbert-vdh/nih-plug/blob/master/plugins/examples/gain/src/lib.rs
+This is a modified version of [Gain] plugin from nih-plug.
+
+[FunDSP]: https://github.com/SamiPerttu/fundsp
+[Gain]: https://github.com/robbert-vdh/nih-plug/blob/master/plugins/examples/gain/src/lib.rs
+[nih-plug]: https://github.com/robbert-vdh/nih-plug
 
 ## How to compile the sources:
 
