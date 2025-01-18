@@ -4,23 +4,10 @@ An example how to plug FunDSP into a nih-plug template.
 
 This is a modified version of Gain from: https://github.com/robbert-vdh/nih-plug/blob/master/plugins/examples/gain/src/lib.rs
 
-What's changed is the implementation of `Default` for `Gain` where the FunDSP patch is constructed, and `<Gain as Plugin>::process()`.
-
-# How to compile
-
-1. Put this repo into `nih-plug/plugins/examples`
-2. Add "plugins/examples/clap-fundsp" to nih-plug's Cargo.toml:
-
-```toml
-[workspace]
-members = [
-  "plugins/examples/clap-fundsp",
-```
-
-3. Go to nih-plug's root dir and compile with:
+## How to compile the sources:
 
 ```
-cargo xtask bundle clap-fundsp --release
+cargo xtask bundle -p clap-fundsp --release
 ```
 
-
+That's it.  The plugin is in `target/bundled/clap-dsp.clap`.
