@@ -1,0 +1,13 @@
+[package]
+name = "clap-fundsp"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+fundsp = "0.20.0"
+nih_plug = { path = "../../../", features = ["assert_process_allocs"] }
+
+parking_lot = "0.12"
