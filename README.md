@@ -10,4 +10,4 @@ This is a modified version of Gain from: https://github.com/robbert-vdh/nih-plug
 cargo xtask bundle -p clap-fundsp --release
 ```
 
-That's it.  The plugin is in `target/bundled/clap-dsp.clap`.
+That's it.  The plugin is in `target/bundled/clap-fundsp.clap`.
