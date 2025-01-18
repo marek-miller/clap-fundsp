@@ -13,22 +13,8 @@ What's changed is the implementation of `Default` for `Gain` where the FunDSP pa
 
 ```toml
 [workspace]
-resolver = "2"
 members = [
-  "nih_plug_derive",
-  "nih_plug_egui",
-  "nih_plug_iced",
-  "nih_plug_vizia",
-  "nih_plug_xtask",
-
-  "cargo_nih_plug",
-  "xtask",
-
-  "plugins/examples/gain",
   "plugins/examples/clap-fundsp",
-
-...
-etc.
 ```
 
 3. Go to nih-plug's root dir and compile with:

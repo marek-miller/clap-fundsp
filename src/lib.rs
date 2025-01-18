@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 struct Gain {
     params: Arc<GainParams>,
-    patch: Box<dyn AudioUnit>,
+    patch: Option<Box<dyn AudioUnit>>,
 }
 
 /// The [`Params`] derive macro gathers all of the information needed for the wrapper to know about
@@ -55,23 +55,9 @@ struct ArrayParams {
 
 impl Default for Gain {
     fn default() -> Self {
-
-        let c = 0.2 * (organ_hz(midi_hz(57.0)) + organ_hz(midi_hz(61.0)) + organ_hz(midi_hz(64.0)));
-        let c = c >> pan(0.0);
-
-        // Add chorus.
-        let c = c >> (chorus(0, 0.0, 0.01, 0.2) | chorus(1, 0.0, 0.01, 0.2));
-
-        let mut c = c
-            >> (declick() | declick())
-            >> (dcblock() | dcblock())
-            >> limiter_stereo(1.0, 5.0);
-
-        c.allocate();
-
         Self {
             params: Arc::new(GainParams::default()),
-            patch: Box::new(c),
+            patch: None,
         }
     }
 }
@@ -129,11 +115,11 @@ impl Default for GainParams {
 }
 
 impl Plugin for Gain {
-    const NAME: &'static str = "Gain";
-    const VENDOR: &'static str = "Moist Plugins GmbH";
+    const NAME: &'static str = "FunDSP organ patch";
+    const VENDOR: &'static str = "Ylou Plugins GmbH";
     // You can use `env!("CARGO_PKG_HOMEPAGE")` to reference the homepage field from the
     // `Cargo.toml` file here
-    const URL: &'static str = "https://youtu.be/dQw4w9WgXcQ";
+    const URL: &'static str = "";
     const EMAIL: &'static str = "info@example.com";
 
     const VERSION: &'static str = env!("CARGO_PKG_VERSION");
@@ -186,21 +172,45 @@ impl Plugin for Gain {
     // plugin. If we do need special initialization, we could implement the `initialize()` and/or
     // `reset()` methods
 
+    fn initialize(
+        &mut self,
+        _audio_io_layout: &AudioIOLayout,
+        buffer_config: &BufferConfig,
+        _context: &mut impl InitContext<Self>,
+    ) -> bool {
+        let c = 0.2 * (organ_hz(midi_hz(57.0)) + organ_hz(midi_hz(61.0)) + organ_hz(midi_hz(64.0)));
+        let c = c >> pan(0.0);
+
+        // Add chorus.
+        let c = c >> (chorus(0, 0.0, 0.01, 0.2) | chorus(1, 0.0, 0.01, 0.2));
+
+        let mut c =
+            c >> (declick() | declick()) >> (dcblock() | dcblock()) >> limiter_stereo(1.0, 5.0);
+
+        c.set_sample_rate(buffer_config.sample_rate.into());
+        c.allocate();
+
+        self.patch = Some(Box::new(c));
+        true
+    }
+
     fn process(
         &mut self,
         buffer: &mut Buffer,
         _aux: &mut AuxiliaryBuffers,
         _context: &mut impl ProcessContext<Self>,
     ) -> ProcessStatus {
-
         let out = buffer.as_slice(); // two slices, one for each channel
         let frame_len = out[0].len();
 
-        for i in 0..frame_len {
-            let gain = self.params.gain.smoothed.next();
-            let (in_l, in_r) = self.patch.get_stereo();
-            out[0][i] = in_l * gain;
-            out[1][i] = in_r * gain;
+        if let Some(patch) = &mut self.patch {
+            for i in 0..frame_len {
+                let gain = self.params.gain.smoothed.next();
+
+                let (in_l, in_r) = patch.get_stereo();
+                out[0][i] = in_l * gain;
+                out[1][i] = in_r * gain;
+            }
         }
 
         ProcessStatus::Normal
@@ -212,8 +222,8 @@ impl Plugin for Gain {
 }
 
 impl ClapPlugin for Gain {
-    const CLAP_ID: &'static str = "com.moist-plugins-gmbh.gain";
-    const CLAP_DESCRIPTION: Option<&'static str> = Some("A smoothed gain parameter example plugin");
+    const CLAP_ID: &'static str = "com.ylou-plugins-gmbh.gain";
+    const CLAP_DESCRIPTION: Option<&'static str> = Some("");
     const CLAP_MANUAL_URL: Option<&'static str> = Some(Self::URL);
     const CLAP_SUPPORT_URL: Option<&'static str> = None;
     const CLAP_FEATURES: &'static [ClapFeature] = &[
@@ -225,7 +235,7 @@ impl ClapPlugin for Gain {
 }
 
 impl Vst3Plugin for Gain {
-    const VST3_CLASS_ID: [u8; 16] = *b"GainMoistestPlug";
+    const VST3_CLASS_ID: [u8; 16] = *b"$$$$YlouPlug$$$$";
     const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] =
         &[Vst3SubCategory::Fx, Vst3SubCategory::Tools];
 }
