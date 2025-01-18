@@ -4,7 +4,7 @@ use parking_lot::Mutex;
 
 use std::sync::Arc;
 
-struct Gain {
+struct FunDSPPlug {
     params: Arc<GainParams>,
     patch: Option<Box<dyn AudioUnit>>,
 }
@@ -53,7 +53,7 @@ struct ArrayParams {
     pub nope: FloatParam,
 }
 
-impl Default for Gain {
+impl Default for FunDSPPlug {
     fn default() -> Self {
         Self {
             params: Arc::new(GainParams::default()),
@@ -68,17 +68,13 @@ impl Default for GainParams {
             // This gain is stored as linear gain. NIH-plug comes with useful conversion functions
             // to treat these kinds of parameters as if we were dealing with decibels. Storing this
             // as decibels is easier to work with, but requires a conversion for every sample.
-            gain: FloatParam::new(
-                "Gain",
-                util::db_to_gain(0.0),
-                FloatRange::Skewed {
-                    min: util::db_to_gain(-30.0),
-                    max: util::db_to_gain(30.0),
-                    // This makes the range appear as if it was linear when displaying the values as
-                    // decibels
-                    factor: FloatRange::gain_skew_factor(-30.0, 30.0),
-                },
-            )
+            gain: FloatParam::new("Gain", util::db_to_gain(0.0), FloatRange::Skewed {
+                min: util::db_to_gain(-30.0),
+                max: util::db_to_gain(30.0),
+                // This makes the range appear as if it was linear when displaying the values as
+                // decibels
+                factor: FloatRange::gain_skew_factor(-30.0, 30.0),
+            })
             // Because the gain parameter is stored as linear gain instead of storing the value as
             // decibels, we need logarithmic smoothing
             .with_smoother(SmoothingStyle::Logarithmic(50.0))
@@ -104,19 +100,18 @@ impl Default for GainParams {
                 .with_value_to_string(formatters::v2s_f32_rounded(2)),
             },
             array_params: [1, 2, 3].map(|index| ArrayParams {
-                nope: FloatParam::new(
-                    format!("Nope {index}"),
-                    0.5,
-                    FloatRange::Linear { min: 1.0, max: 2.0 },
-                ),
+                nope: FloatParam::new(format!("Nope {index}"), 0.5, FloatRange::Linear {
+                    min: 1.0,
+                    max: 2.0,
+                }),
             }),
         }
     }
 }
 
-impl Plugin for Gain {
+impl Plugin for FunDSPPlug {
     const NAME: &'static str = "FunDSP organ patch";
-    const VENDOR: &'static str = "Ylou Plugins GmbH";
+    const VENDOR: &'static str = "Pluggs GmbH";
     // You can use `env!("CARGO_PKG_HOMEPAGE")` to reference the homepage field from the
     // `Cargo.toml` file here
     const URL: &'static str = "";
@@ -221,8 +216,8 @@ impl Plugin for Gain {
     fn deactivate(&mut self) {}
 }
 
-impl ClapPlugin for Gain {
-    const CLAP_ID: &'static str = "com.ylou-plugins-gmbh.gain";
+impl ClapPlugin for FunDSPPlug {
+    const CLAP_ID: &'static str = "com.plugggs-gmbh.clap_fundsp";
     const CLAP_DESCRIPTION: Option<&'static str> = Some("");
     const CLAP_MANUAL_URL: Option<&'static str> = Some(Self::URL);
     const CLAP_SUPPORT_URL: Option<&'static str> = None;
@@ -234,11 +229,11 @@ impl ClapPlugin for Gain {
     ];
 }
 
-impl Vst3Plugin for Gain {
-    const VST3_CLASS_ID: [u8; 16] = *b"$$$$YlouPlug$$$$";
+impl Vst3Plugin for FunDSPPlug {
+    const VST3_CLASS_ID: [u8; 16] = *b"$$$$Plugggs_$$$$";
     const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] =
         &[Vst3SubCategory::Fx, Vst3SubCategory::Tools];
 }
 
-nih_export_clap!(Gain);
-nih_export_vst3!(Gain);
+nih_export_clap!(FunDSPPlug);
+nih_export_vst3!(FunDSPPlug);
