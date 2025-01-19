@@ -1,0 +1,12 @@
+[package]
+name = "nih_plug-chord"
+version = "0.1.0"
+edition = "2024"
+resolver = "3"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+fundsp = { workspace = true }
+nih_plug = { git = "https://github.com/robbert-vdh/nih-plug.git" }

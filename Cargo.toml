@@ -1,15 +1,6 @@
-[package]
-name = "clap-fundsp"
-version = "0.1.0"
-edition = "2024"
-
 [workspace]
-members = ["xtask"]
+resolver = "3"
+members = ["nih_plug-chord"]
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-fundsp = "0.20.0"
-parking_lot = "0.12"
-nih_plug = { git = "https://github.com/robbert-vdh/nih-plug.git" }
+[workspace.dependencies]
+fundsp = { version = "0.20.0" }
