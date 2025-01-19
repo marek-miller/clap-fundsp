@@ -1,7 +1,5 @@
 # clap-fundsp
 
-clap-fundsp
-
 Examples of using [FunDSP] with a [CLAP] plugin template.
 
 This repository contains templates that differ based on the CLAP API wrapper for
@@ -9,9 +7,6 @@ Rust used to implement plugin functionality:
 
 * `nih_plug-chord`: Plays an organ chord indefinitely. This is a modified
   version of the [Gain] example from [nih-plug].
-
-A few examples how to use [FunDSP] with a [CLAP] plugin template.
-
 
 [CLAP]: https://cleveraudio.org/
 
@@ -23,9 +18,10 @@ A few examples how to use [FunDSP] with a [CLAP] plugin template.
 
 ## How to compile the plugins
 
-We assume Rust Edition 2024 (available on *nightly* Rust 1.85).
+The examples assume the use of Rust Edition 2024 (available in nightly Rust
+1.85).
 
-Build the examples with:
+Build the examples with the following command:
 
 ```
 cargo build -r
