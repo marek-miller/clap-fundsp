@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["nih_plug-chord"]
+members = ["clap_sys-saw", "nih_plug-chord"]
 
 [workspace.dependencies]
 fundsp = { version = "0.20.0" }
