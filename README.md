@@ -5,10 +5,13 @@ Examples of using [FunDSP] with a [CLAP] plugin template.
 This repository contains templates that differ based on the CLAP API wrapper for
 Rust used to implement plugin functionality:
 
+* `clap_sys-saw`: A plugin built from [clap-sys], raw Rust bindings to CLAP.
 * `nih_plug-chord`: Plays an organ chord indefinitely. This is a modified
   version of the [Gain] example from [nih-plug].
 
 [CLAP]: https://cleveraudio.org/
+
+[clap-sys]: https://github.com/micahrj/clap-sys
 
 [FunDSP]: https://github.com/SamiPerttu/fundsp
 
@@ -27,7 +30,7 @@ Build the examples with the following command:
 cargo build -r
 ```
 
-The compiled CLAP plugins are standard (C ABI) dynamic libraries located in the
+The compiled CLAP plugins are standard dynamic libraries located in the
 `target/release` directory. Their filenames are OS-specific. For example:
 
 ```
