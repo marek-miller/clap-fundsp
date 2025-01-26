@@ -8,6 +8,7 @@ Rust used to implement plugin functionality:
 * `clap_sys-saw`: A plugin built from [clap-sys], raw Rust bindings to CLAP.
 * `nih_plug-chord`: Plays an organ chord indefinitely. This is a modified
   version of the [Gain] example from [nih-plug].
+* [`clap-clap`]: Another Rust framework for CLAP.
 
 [CLAP]: https://cleveraudio.org/
 
@@ -18,6 +19,8 @@ Rust used to implement plugin functionality:
 [Gain]: https://github.com/robbert-vdh/nih-plug/blob/master/plugins/examples/gain/src/lib.rs
 
 [nih-plug]: https://github.com/robbert-vdh/nih-plug
+
+[clap-clap]: https://github.com/mira-merkell/clap-clap
 
 ## How to compile the plugins
 
